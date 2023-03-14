@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,12 +13,24 @@ public class Main {
         persons.add(new Person("Ctas", "Krot", 30));
         persons.add(new Person("Elena", "Jess Krown-Dabur", 27));
         System.out.println(persons);
-        Collections.sort(persons, new PersonsComparator(5));
+        
+        Comparator<Person> comparator = (o1, o2) -> {
+            int maxSurnameLength = 3;
+            String[] wordsInO1Surname = o1.getSurname().split("[-, ]");
+            int o1NumWords = wordsInO1Surname.length;
+            String[] wordsInO2Surname = o2.getSurname().split("[-, ]");
+            int o2NumWords = wordsInO2Surname.length;
+
+            if (o1NumWords < maxSurnameLength && o2NumWords < maxSurnameLength) {
+                if (Integer.compare(o2NumWords, o1NumWords) != 0) {
+                    return Integer.compare(o2NumWords, o1NumWords);
+                } else
+                    return Integer.compare(o2.getAge(), o1.getAge());
+            } else
+                return Integer.compare(o2.getAge(), o1.getAge());
+        };
+        Collections.sort(persons, comparator);
         System.out.println("После сортировки 1 сортировки(кто знатнее(или старше) - тот выше): ");
         System.out.println(persons);
-        System.out.println("После сортировки 2 сортировки(кто знатнее(или старше) - тот выше): ");
-        Collections.sort(persons, new PersonsComparator(2));
-        System.out.println(persons);
-
     }
 }
